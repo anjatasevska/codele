@@ -134,7 +134,7 @@ Daily puzzles are assigned by **calendar date** in the database. Only one puzzle
 | Migrations | Flyway |
 | Build | Maven |
 | Local infra | Docker Compose |
-| Cloud (optional) | Neon + Railway — see [DEPLOY.md](DEPLOY.md) |
+| Cloud (optional) | Neon + Railway |
 
 ---
 
@@ -327,7 +327,6 @@ codele/
 │   ├── db/migration/           # Flyway SQL
 │   ├── templates/              # Thymeleaf HTML
 │   └── static/                 # CSS, JavaScript
-├── DEPLOY.md                   # Neon + Railway guide
 └── README.md
 ```
 

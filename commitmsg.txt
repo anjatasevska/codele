@@ -1,3 +1,0 @@
-Improve production gameplay, archive, and puzzle scheduling.
-
-Enable prod puzzle seeding, restrict archive to past dailies, block future puzzles from play, tighten code masking with literal guesses, and clean up the login page.
