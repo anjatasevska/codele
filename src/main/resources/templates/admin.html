@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Codele</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}" />
+</head>
+<body>
+<div class="container admin-page">
+  <div th:replace="~{fragments/nav :: main-nav('Admin panel')}"></div>
+
+  <div class="card admin-banner" th:if="${message}">
+    <p class="good" th:text="${message}">Success</p>
+  </div>
+  <div class="card admin-banner" th:if="${error}">
+    <p class="warn" th:text="${error}">Error</p>
+  </div>
+
+  <div class="card admin-banner">
+    <h3>Manage daily puzzles</h3>
+    <p class="muted" th:if="${#lists.isEmpty(puzzles)}">
+      The database is empty — that's normal on first run. Use the form below to create your first puzzle,
+      then set <strong>Scheduled date</strong> to today for the daily challenge.
+    </p>
+    <p class="muted" th:unless="${#lists.isEmpty(puzzles)}">
+      <span th:text="${#lists.size(puzzles)}">0</span> puzzle(s) in the database.
+      Archive and daily play use these records.
+    </p>
+  </div>
+
+  <div class="card admin-highlight">
+    <h3 th:text="${editId != null} ? 'Edit puzzle #' + ${editId} : 'Add new puzzle'">Add new puzzle</h3>
+    <p class="muted">Required fields are marked. After saving, check <a th:href="@{/archive}">Archive</a>.</p>
+    <form class="admin-form-grid" method="post"
+          th:action="${editId != null} ? @{/admin/puzzles/{id}(id=${editId})} : @{/admin/puzzles}"
+          th:object="${puzzleForm}">
+      <label>Slug
+        <input type="text" class="input" th:field="*{slug}" required placeholder="bubble-sort" />
+      </label>
+      <label>Answer (program name)
+        <input type="text" class="input" th:field="*{answer}" required placeholder="BubbleSort" />
+      </label>
+      <label>Language
+        <input type="text" class="input" th:field="*{language}" required placeholder="Java" />
+      </label>
+      <label>Category
+        <select class="input" th:field="*{category}" required>
+          <option th:each="c : ${categories}" th:value="${c}" th:text="${c}"></option>
+        </select>
+      </label>
+      <label>Difficulty
+        <select class="input" th:field="*{difficulty}" required>
+          <option th:each="d : ${difficulties}" th:value="${d}" th:text="${d}"></option>
+        </select>
+      </label>
+      <label>Scheduled date <span class="muted">(set to today for daily puzzle)</span>
+        <input type="date" class="input" th:field="*{scheduledDate}" />
+      </label>
+      <label class="admin-span-2">Tags (comma-separated)
+        <input type="text" class="input" th:field="*{tags}" placeholder="sorting, arrays" />
+      </label>
+      <label class="admin-span-full">Short clue
+        <input type="text" class="input" th:field="*{shortClue}" />
+      </label>
+      <label class="admin-span-full">Code
+        <textarea class="input admin-code" th:field="*{codeContent}" rows="10" required placeholder="public static void sort() { ... }"></textarea>
+      </label>
+      <label class="admin-span-full">Explanation
+        <textarea class="input" th:field="*{explanation}" rows="3"></textarea>
+      </label>
+      <div class="admin-form-actions">
+        <button type="submit" class="btn" th:text="${editId != null} ? 'Update puzzle' : 'Create puzzle'">Create puzzle</button>
+        <a th:if="${editId != null}" class="btn secondary" th:href="@{/admin}">Cancel edit</a>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" th:if="${!#lists.isEmpty(puzzles)}">
+    <h3>All puzzles</h3>
+    <div class="admin-puzzle-list">
+      <article class="admin-puzzle-row" th:each="p : ${puzzles}">
+        <div>
+          <strong th:text="'#' + ${p.id} + ' ' + ${p.answer}">Puzzle</strong>
+          <span class="muted" th:text="' · ' + ${p.language} + ' · ' + ${p.category} + ' · ' + ${p.difficulty}"></span>
+          <div>
+            <span class="chip good" th:if="${p.scheduledDate != null}" th:text="'Daily: ' + ${p.scheduledDate}">Daily</span>
+            <span class="muted" th:unless="${p.scheduledDate != null}">Not scheduled</span>
+          </div>
+          <p class="muted" th:text="${p.shortClue}"></p>
+        </div>
+        <div class="admin-row-actions">
+          <a class="btn secondary" th:href="@{/admin(editId=${p.id})}">Edit</a>
+          <a class="btn secondary" th:href="@{'/play/' + ${p.id}}">Play</a>
+          <form method="post" th:action="@{/admin/puzzles/{id}/delete(id=${p.id})}" onsubmit="return confirm('Delete this puzzle?');">
+            <button type="submit" class="btn secondary">Delete</button>
+          </form>
+        </div>
+      </article>
+    </div>
+  </div>
+
+<!--  <div class="card" th:if="${!#lists.isEmpty(puzzles)}">-->
+<!--    <h3>Bulk schedule</h3>-->
+<!--    <form method="post" th:action="@{/admin/schedule}" class="admin-form-grid">-->
+<!--      <label>Start date-->
+<!--        <input type="date" name="startDate" class="input" required />-->
+<!--      </label>-->
+<!--      <label class="admin-span-2">Puzzle IDs (comma-separated)-->
+<!--        <input type="text" name="puzzleIds" class="input" placeholder="1, 2, 3" required />-->
+<!--      </label>-->
+<!--      <button type="submit" class="btn">Schedule days</button>-->
+<!--    </form>-->
+<!--  </div>-->
+</div>
+</body>
+</html>

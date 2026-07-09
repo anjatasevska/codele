@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Leaderboard</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body><div class="container">
+  <div class="nav"><h2>Leaderboard</h2><div><a th:href="@{/}">Home</a> <a th:href="@{/how-to-play}">How to play</a></div></div>
+  <div class="card" th:each="row, i : ${leaders}">
+    <p><strong>#<span th:text="${i.count}"></span></strong> Score: <span th:text="${row.score}"></span> |
+      Puzzle #<span th:text="${row.puzzle.id}"></span> |
+      Player: <span th:text="${row.user != null ? row.user.username : 'Guest'}"></span></p>
+  </div>
+</div></body></html>

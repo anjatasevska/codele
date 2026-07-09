@@ -1,0 +1,6 @@
+# Railway build config (Linux)
+[phases.build]
+cmds = ["./mvnw clean package -DskipTests"]
+
+[start]
+cmd = "java -Dspring.profiles.active=prod -jar target/codeleApp-0.0.1-SNAPSHOT.jar"

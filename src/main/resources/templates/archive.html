@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Archive - Codele</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}" />
+</head>
+<body>
+<div class="container">
+  <div th:replace="~{fragments/nav :: main-nav('Archive')}"></div>
+  <div class="card" th:if="${#lists.isEmpty(puzzles)}">
+    <h3>No past puzzles yet</h3>
+    <p class="muted">Completed daily puzzles appear here after their scheduled date. Today's puzzle is on the <a th:href="@{/}">home page</a>.</p>
+  </div>
+  <div class="card" th:each="p : ${puzzles}">
+    <h3 th:text="${p.scheduledDate != null ? #temporals.format(p.scheduledDate, 'MMMM d, yyyy') : 'Puzzle #' + p.id}">Puzzle</h3>
+    <p class="muted">Language: <span th:text="${p.language}"></span></p>
+    <p class="muted" th:if="${p.scheduledDate != null}">
+      Daily puzzle for <span th:text="${#temporals.format(p.scheduledDate, 'MMMM d, yyyy')}">—</span>
+    </p>
+    <a class="btn" th:href="@{'/play/' + ${p.id}}">Play</a>
+  </div>
+</div>
+</body>
+</html>

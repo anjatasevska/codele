@@ -1,0 +1,123 @@
+spring:
+  profiles:
+    default: local
+  application:
+    name: codeleApp
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Codele
+    description: Daily code puzzle game with PostgreSQL and admin scheduling
+
+codele:
+  seed:
+    enabled: false
+  admin:
+    username: ${CODELE_ADMIN_USERNAME:admin}
+    email: ${CODELE_ADMIN_EMAIL:admin@codele.local}
+    password: ${CODELE_ADMIN_PASSWORD:Sader123@}
+
+---
+# Local development: PostgreSQL via Docker Compose (default profile)
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5433}/${POSTGRES_DB:codele}}
+    username: ${POSTGRES_USER:codele}
+    password: ${POSTGRES_PASSWORD:codele}
+    driver-class-name: org.postgresql.Driver
+
+  h2:
+    console:
+      enabled: false
+
+logging:
+  level:
+    org.flywaydb: INFO
+    org.hibernate.SQL: WARN
+
+codele:
+  admin:
+    sync-password-on-startup: true
+
+---
+# Production / cloud (Neon, Railway, etc.)
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
+
+  h2:
+    console:
+      enabled: false
+
+server:
+  port: ${PORT:8080}
+
+codele:
+  seed:
+    enabled: true
+
+---
+# Automated tests only (in-memory H2, same migrations)
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:codele_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    enabled: true
+
+codele:
+  admin:
+    password: test-admin

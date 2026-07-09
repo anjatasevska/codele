@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>No daily puzzle — Codele</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}" />
+</head>
+<body>
+<div class="container">
+  <div class="nav">
+    <h2>Codele</h2>
+    <div>
+      <a th:href="@{/}">Home</a>
+      <a th:href="@{/archive}">Archive</a>
+    </div>
+  </div>
+  <div class="card">
+    <h1>No daily puzzle today</h1>
+    <p class="muted" th:text="${message}">Check back later.</p>
+    <a class="btn secondary" th:href="@{/archive}">Browse archive</a>
+  </div>
+</div>
+</body>
+</html>

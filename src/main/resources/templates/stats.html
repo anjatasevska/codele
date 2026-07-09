@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Stats</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body><div class="container">
+  <div class="nav"><h2>Stats</h2><div><a th:href="@{/}">Home</a></div></div>
+  <div class="card" th:if="${stats == null}">
+    <p>No stats yet. Solve puzzles while logged in to build your profile.</p>
+  </div>
+  <div class="stats-grid" th:if="${stats != null}">
+    <div class="metric" th:each="entry : ${stats}">
+      <div class="muted" th:text="${entry.key}"></div>
+      <div th:text="${entry.value}"></div>
+    </div>
+  </div>
+</div></body></html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Codele</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}" />
+</head>
+<body>
+<div class="container">
+  <div th:replace="~{fragments/nav :: main-nav('Codele')}"></div>
+
+  <div class="hero hero-single">
+    <div class="card">
+      <h1>Guess hidden code tokens, reveal logic, name the program.</h1>
+      <p class="muted">A Wordle-like code puzzle with daily challenges and free-play archive.</p>
+      <div th:if="${noDailyPuzzle}">
+        <p class="muted">No puzzle is scheduled for today yet. An admin must add one in the admin panel with today's date.</p>
+        <div class="hero-actions">
+          <a sec:authorize="hasRole('ADMIN')" class="btn" th:href="@{/admin}">Go to Admin</a>
+          <a class="btn secondary" th:href="@{/archive}">Browse Archive</a>
+        </div>
+      </div>
+      <div th:unless="${noDailyPuzzle}">
+        <p class="muted">Language: <span th:text="${dailyPuzzle.language}"></span></p>
+        <p th:if="${dailyPuzzle.shortClue != null && !#strings.isEmpty(dailyPuzzle.shortClue)}">
+          <strong>Clue:</strong> <span th:text="${dailyPuzzle.shortClue}"></span>
+        </p>
+        <div class="hero-actions">
+          <a class="btn" th:href="@{/play/daily}">Play Daily Puzzle</a>
+          <a class="btn secondary" th:href="@{/archive}">Browse Archive</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <th:block th:replace="~{fragments/how-to-play :: instructions}" />
+</div>
+</body>
+</html>

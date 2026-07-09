@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Play - Codele</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/app.css}" />
+</head>
+<body class="play-page">
+<div class="play-bg" aria-hidden="true"></div>
+<div class="container play-layout">
+  <header class="play-top">
+    <div class="play-brand">
+      <span class="play-logo" aria-hidden="true">{ }</span>
+      <div>
+        <h1 class="play-title">Codele</h1>
+        <p class="play-tagline">Guess the hidden words in the snippet</p>
+      </div>
+    </div>
+    <nav class="play-nav">
+      <a th:href="@{/}">Home</a>
+      <a th:href="@{/how-to-play}">How to play</a>
+      <a th:href="@{/archive}">Archive</a>
+    </nav>
+  </header>
+
+  <section class="panel panel-hero">
+    <div class="hero-row">
+      <span class="lang-pill" id="meta" title="Puzzle language">…</span>
+      <div class="stat-pills">
+        <span class="pill"><span class="pill-label">Decoded</span> <strong id="reveal">0%</strong></span>
+        <span class="pill pill-warn"><span class="pill-label">Oops</span> <strong id="wrongCount">0</strong></span>
+        <span class="pill"><span class="pill-label">Tries</span> <strong id="guessCount">0</strong></span>
+        <span class="pill pill-hint"><span class="pill-label">Hints</span> <strong id="hintsUsed">0</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="code-box code-box-glow" id="code">Loading…</div>
+
+  <div class="panel-grid">
+    <section class="panel panel-accent">
+      <h2 class="panel-heading">Guess a word</h2>
+      <p class="panel-lead">If that identifier appears in the code, every copy lights up.</p>
+      <form id="guessForm" class="guess-row">
+        <input class="input input-glow" id="guessInput" type="text" autocomplete="off" placeholder="e.g. index, result, parse" />
+        <button class="btn btn-primary" id="guessSubmit" type="submit">Guess it</button>
+      </form>
+      <div class="guess-history">
+        <div class="guess-history-row">
+          <span class="guess-history-label guess-history-label--good">In the code</span>
+          <div id="correctGuesses" class="chip-row">
+            <span class="guess-history-empty muted">None yet</span>
+          </div>
+        </div>
+        <div class="guess-history-row">
+          <span class="guess-history-label guess-history-label--bad">Not in the code</span>
+          <div id="wrongGuesses" class="chip-row">
+            <span class="guess-history-empty muted">None yet</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel-help">
+      <h2 class="panel-heading">Need a nudge?</h2>
+      <p class="panel-lead">Peek reveals the next hidden token in reading order (costs a hint).</p>
+      <div class="btn-stack">
+        <button class="btn btn-magic" type="button" id="randomRevealBtn">Peek next word</button>
+        <button class="btn btn-ghost" type="button" id="giveUpBtn">Show answer</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel panel-final" id="finalWrap" style="display:none">
+    <h2 class="panel-heading">Final guess</h2>
+    <p class="panel-lead">Name the file, function, or program (unlocked after enough of the code is decoded).</p>
+    <form id="finalForm" class="guess-row">
+      <input class="input input-glow" id="finalInput" type="text" autocomplete="off" placeholder="e.g. BubbleSort" />
+      <button class="btn btn-primary" id="finalSubmit" type="submit">Submit answer</button>
+    </form>
+  </section>
+
+  <section class="panel summary-panel" id="summary"></section>
+</div>
+
+<script th:src="@{/js/play.js}"></script>
+<script th:inline="javascript">
+  initPlay([[${puzzle.id}]]);
+</script>
+</body>
+</html>
